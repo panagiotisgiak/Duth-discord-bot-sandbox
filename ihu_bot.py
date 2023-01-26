@@ -61,7 +61,7 @@ async def teachers(ctx):
                     "13. Χριστοδουλίδου Χρυστάλα\n14. Καζανίδης Ιωάννης\n15. Μαυρίδου Ευθυμία\n16. Νάνου Ανδρομάχη\n17. Αμανατίδης Πέτρος")
     await ctx.send(embed=e)
     check = lambda m: m.author == ctx.author
-    msg = await bot.wait_for('message', check=check)
+    msg = await bot.wait_for('message', check=check, timeout=30)
     try:
         e1 = discord.Embed(
                 title=teacher[int(str(msg.content))-1][0],
