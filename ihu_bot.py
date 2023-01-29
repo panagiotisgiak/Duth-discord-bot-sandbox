@@ -674,18 +674,5 @@ async def _help(ctx):
     comp.callback = comp_callback
     bot.callback = bot_callback
     
-
-@bot.command()
-async def test(ctx):
-    button1 = Button(label="Click me!")
-    view = View()
-    view.add_item(button1)
-
-    async def callback(interaction):
-        await interaction.response.send_message("You clicked me!", ephemeral=True)
-
-    button1.callback = callback
-    await ctx.send("Hello", view=view)
-
-
+    
 bot.run(TOKEN)
