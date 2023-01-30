@@ -44,7 +44,7 @@ async def teachers(ctx):
     )
     border = ""
     for i in range(1, 18):
-        border += str(i) + ". " + teachers["teachers"][str(i)]["name"][2:-2] + "\n"
+        border += str(i) + ". " + teachers[str(i)]["name"][2:-2] + "\n"
     e.add_field(name="Γράψε τον αριθμό του καθηγητή",
                 value=border)
     await ctx.send(embed=e)
@@ -52,12 +52,12 @@ async def teachers(ctx):
     msg = await bot.wait_for('message', check=check, timeout=30)
     try:
         e1 = discord.Embed(
-                title=teachers["teachers"][msg.content]["name"],
+                title=teachers[msg.content]["name"],
                 colour=discord.Colour.orange()
             )
-        e1.add_field(name="Email", value=teachers["teachers"][msg.content]["email"], inline=False)
-        e1.add_field(name="Τηλέφωνο", value=teachers["teachers"][msg.content]["phone"], inline=False)
-        e1.add_field(name="Ώρες Διαθεσιμότητας", value=teachers["teachers"][msg.content]["hours"], inline=False)
+        e1.add_field(name="Email", value=teachers[msg.content]["email"], inline=False)
+        e1.add_field(name="Τηλέφωνο", value=teachers[msg.content]["phone"], inline=False)
+        e1.add_field(name="Ώρες Διαθεσιμότητας", value=teachers[msg.content]["hours"], inline=False)
         await ctx.send(embed=e1)
     except:
         await ctx.send("Γράψε έναν έγκυρο αριθμό")
