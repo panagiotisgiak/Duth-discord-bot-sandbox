@@ -1,9 +1,11 @@
 import discord
 from discord.ext import commands
 from discord.ui import Button, View
+from discord import app_commands
 import asyncio
 import time
 from discordtoken import TOKEN
+import json
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -14,6 +16,7 @@ bot.remove_command('help')
 @bot.event
 async def on_ready():
     await bot.change_presence(activity=discord.Game(f"-help"))
+    await bot.tree.sync(guild=discord.Object(id=898491436738174996))
     print("Bot is ready.")
 
 
@@ -33,46 +36,33 @@ async def contact(ctx):
 
 @bot.command()
 async def teachers(ctx):
-    teacher = [["__Λάγκας Θωμάς__", "tlagkas@cs.ihu.gr", "2510462320", "Τετάρτη 14:00-16:00"],
-            ["__Καμπουρλάζος Βασίλειος__", "vgkabs@teiemt.gr","2510462320", "Πέμπτη 12:00-14:00"],
-            ["__Καραμπατζάκης Δημήτρης__", "dkara@cs.ihu.gr", "2510462612", "Μετά από ραντεβού με email"],
-            ["__Ράντος Κωνσταντίνος__", "krantos@cs.ihu.gr", "2510462611", "Τετάρτη 13:00-15:00\nΠέμπτη 12:00-14:00"],
-            ["__Παχίδης Θεόδωρος__", "pated@cs.ihu.gr", "2510462281", "Τρίτη 18:00-20:30", ""],
-            ["__Μωυσιάδης Ελευθέριος__", "lmous@teiemt.gr", "2510462346", "Δευτέρα 8:00-10:00\nΤρίτη 8:00-11:00"],
-            ["__Τσινάκος Αύγουστος__", "tsinakos@cs.ihu.gr", "2510462359", "Δευτέρα 11:00-13:00\nΠέμπτη 12:00-14:00"],
-            ["__Παπακώστας Γεώργιος__", "gpapak@cs.ihu.gr", "2510462281", "Τρίτη 12:00-14:00\nΠέμπτη 12:00-14:00"],
-            ["__Παπαδημητρίου Στέργιος__", "sterg@teiemt.gr", "2510462323", "Καθημερινά 11:00-17:00"],
-            ["__Τσιμπερίδης Ιωάννης__", "tsimperidis@cs.ihu.gr", "N/A", "N/A"],
-            ["__Τσουκαλάς Βασίλης__", "vtsouk@cs.ihu.gr", "2510462288", "24/7"],
-            ["__Μανιός Μιχαήλ__", "m.manios@cs.ihu.gr", "2510462271", "Τρίτη 18:00-20:30"],
-            ["__Χριστοδουλίδου Χρυστάλα__", "christich17@gmail.com", "N/A", "N/A"],
-            ["__Καζανίδης Ιωάννης__", "kazanidis@cs.ihu.gr", "2510462625", "Καθορισμός συνάντησης με email"],
-            ["__Μαυρίδου Ευθυμία__", "efthmavridou@emt.ihu.gr", "N/A", "N/A"],
-            ["__Νάνου Ανδρομάχη__", "andnanou@cs.ihu.gr", "N/A", "N/A"],
-            ["__Αμανατίδης Πέτρος__", "peamana@cs.ihu.gr", "N/A", "N/A"]]
+    with open("teachers.json", "rb") as f:
+            teachers = json.load(f)
     e = discord.Embed(
         title=":bookmark_tabs: __Teachers info__ :bookmark_tabs:",
         colour=discord.Colour.red()
     )
+    border = ""
+    for i in range(1, 18):
+        border += str(i) + ". " + teachers["teachers"][str(i)]["name"][2:-2] + "\n"
     e.add_field(name="Γράψε τον αριθμό του καθηγητή",
-                value="1. Λάγκας Θωμάς\n2. Καμπουρλάζος Βασίλειος\n3. Καραμπατζάκης Δημήτρης\n4. Ράντος Κωνσταντίνος\n"
-                    "5. Παχίδης Θεόδορος\n6. Μωυσιάδης Ελευθέριος\n7. Τσινάκος Αύγουστος\n8. Παπακώστας Γεώργιος\n"
-                    "9. Παπαδημητρίου Στέργιος\n10. Τσιμπερίδης Ιωάννης\n11. Τσουκαλάς Βασίλης\n12. Μανιός Μιχαήλ\n"
-                    "13. Χριστοδουλίδου Χρυστάλα\n14. Καζανίδης Ιωάννης\n15. Μαυρίδου Ευθυμία\n16. Νάνου Ανδρομάχη\n17. Αμανατίδης Πέτρος")
+                value=border)
     await ctx.send(embed=e)
     check = lambda m: m.author == ctx.author
     msg = await bot.wait_for('message', check=check, timeout=30)
     try:
         e1 = discord.Embed(
-                title=teacher[int(str(msg.content))-1][0],
+                title=teachers["teachers"][msg.content]["name"],
                 colour=discord.Colour.orange()
             )
-        e1.add_field(name="Email", value=teacher[int(str(msg.content))-1][1], inline=False)
-        e1.add_field(name="Τηλέφωνο", value=teacher[int(str(msg.content))-1][2], inline=False)
-        e1.add_field(name="Ώρες Διαθεσιμότητας", value=teacher[int(str(msg.content))-1][3], inline=False)
+        e1.add_field(name="Email", value=teachers["teachers"][msg.content]["email"], inline=False)
+        e1.add_field(name="Τηλέφωνο", value=teachers["teachers"][msg.content]["phone"], inline=False)
+        e1.add_field(name="Ώρες Διαθεσιμότητας", value=teachers["teachers"][msg.content]["hours"], inline=False)
         await ctx.send(embed=e1)
     except:
         await ctx.send("Γράψε έναν έγκυρο αριθμό")
+
+
 
 
 @bot.command()
@@ -674,5 +664,13 @@ async def _help(ctx):
     comp.callback = comp_callback
     bot.callback = bot_callback
     
-    
+
+#------------------------------------------------------------Test Code------------------------------------------------------------
+
+
+"""
+@bot.tree.command(name = "help", description = "Testing mode", guild=discord.Object(id=898491436738174996)) #Add the guild ids in which the slash command will appear. If it should be in all, remove the argument, but note that it will take some time (up to an hour) to register the command if it's for all guilds.
+async def first_command(interaction):
+    await interaction.response.send_message("Hello!")
+"""
 bot.run(TOKEN)

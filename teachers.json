@@ -1,0 +1,20 @@
+{"teachers": {
+    "1": {"name": "__Λάγκας Θωμάς__", "email": "tlagkas@cs.ihu.gr", "phone": "2510462320", "hours": "Τετάρτη 14:00-16:00"},
+    "2": {"name": "__Καμπουρλάζος Βασίλειος__", "email": "vgkabs@teiemt.gr", "phone": "2510462320", "hours": "Πέμπτη 12:00-14:00"},
+    "3": {"name": "__Καραμπατζάκης Δημήτρης__", "email": "dkara@cs.ihu.gr", "phone": "2510462612", "hours": "Μετά από ραντεβού με email"},
+    "4": {"name": "__Ράντος Κωνσταντίνος__", "email": "krantos@cs.ihu.gr", "phone": "2510462611", "hours": "Τετάρτη 13:00-15:00\nΠέμπτη 12:00-14:00"},
+    "5": {"name": "__Παχίδης Θεόδωρος__", "email": "pated@cs.ihu.gr", "phone": "2510462281", "hours": "Τρίτη 18:00-20:30"},
+    "6": {"name": "__Μωυσιάδης Ελευθέριος__", "email": "lmous@teiemt.gr", "phone": "2510462346", "hours": "Δευτέρα 8:00-10:00\nΤρίτη 8:00-11:00"},
+    "7": {"name": "__Τσινάκος Αύγουστος__", "email": "tsinakos@cs.ihu.gr", "phone": "2510462359", "hours": "Δευτέρα 11:00-13:00\nΠέμπτη 12:00-14:00"},
+    "8": {"name": "__Παπακώστας Γεώργιος__", "email": "gpapak@cs.ihu.gr", "phone": "2510462281", "hours": "Τρίτη 12:00-14:00\nΠέμπτη 12:00-14:00"},
+    "9": {"name": "__Παπαδημητρίου Στέργιος__", "email": "sterg@teiemt.gr", "phone": "2510462323", "hours": "Καθημερινά 11:00-17:00"},
+    "10": {"name": "__Τσιμπερίδης Ιωάννης__", "email": "tsimperidis@cs.ihu.gr", "phone": "N/A", "hours": "N/A"},
+    "11": {"name": "__Τσουκαλάς Βασίλης__", "email": "vtsouk@cs.ihu.gr", "phone": "2510462288", "hours": "24/7"},
+    "12": {"name": "__Μανιός Μιχαήλ__", "email": "m.manios@cs.ihu.gr", "phone": "2510462271", "hours": "Τρίτη 18:00-20:30"},
+    "13": {"name": "__Χριστοδουλίδου Χρυστάλα__", "email": "christich17@gmail.com", "phone": "N/A", "hours": "N/A"},
+    "14": {"name": "__Καζανίδης Ιωάννης__", "email": "kazanidis@cs.ihu.gr", "phone": "2510462625", "hours": "Καθορισμός συνάντησης με email"},
+    "15": {"name": "__Μαυρίδου Ευθυμία__", "email": "efthmavridou@emt.ihu.gr", "phone": "N/A", "hours": "N/A"},
+    "16": {"name": "__Νάνου Ανδρομάχη__", "email": "andnanou@cs.ihu.gr", "phone": "N/A", "hours": "N/A"},
+    "17": {"name": "__Αμανατίδης Πέτρος__", "email": "peamana@cs.ihu.gr", "phone": "N/A", "hours": "N/A"}
+}
+}
