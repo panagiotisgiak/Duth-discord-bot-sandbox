@@ -3,9 +3,9 @@ from discord.ext import commands
 from discord.ui import Button, View
 from discord import app_commands
 import asyncio
-import time
 from discordtoken import TOKEN
 import json
+import pandas as pd
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -20,17 +20,6 @@ async def on_ready():
     print("Bot is ready.")
 
 
-@bot.command()
-async def contact(ctx):
-    e = discord.Embed(
-        title=":telephone: __Communication__ :telephone:",
-        colour=discord.Colour.blue()
-    )
-    e.add_field(name="Τηλέφωνα", value=" +30-2510462147\n+30-2510462341", inline=False)
-    e.add_field(name="Email", value="info@cs.ihu.gr", inline=False)
-    e.add_field(name="Fax", value="0030 2510462348", inline=False)
-    e.add_field(name="Website", value="http://www.cs.ihu.gr", inline=False)
-    await ctx.send(embed=e)
 
 # ------------------------ IHU INFO ------------------------ #
 
@@ -64,7 +53,6 @@ async def teachers(ctx):
 
 
 
-
 @bot.command()
 async def services(ctx):
     e = discord.Embed(
@@ -86,54 +74,33 @@ async def services(ctx):
 
 @bot.command()
 async def books(ctx):
-    page1 = discord.Embed (
-        title = '__1ο Εξάμηνο__',
-        description = '__Κωδικοί Συγγραμάτων__',
-        colour = discord.Colour.red()
-    )
-    page1.add_field(name="Ψηφιακή Σχεδίαση", value="86192991", inline=False)
-    page1.add_field(name="Μαθηματικά Ι", value="77107082", inline=False)
-    page1.add_field(name="Διακριτά Μαθηματικά", value="77106820", inline=False)
-    page1.add_field(name="Εργαστήριο C++", value="50659221", inline=False)
-    page1.add_field(name="Αγγλική Τεχνική Ορολογία ", value="86195605", inline=False)
-    page1.set_footer(text="Link για τις δηλώσεις: https://service.eudoxus.gr/student")
-    page2 = discord.Embed (
-        title = '__2ο Εξάμηνο__',
-        description = '__Κωδικοί Συγγραμάτων__',
-        colour = discord.Colour.red()
-    )
-    page2.add_field(name="Βάσεις δεδομένων", value="50656346", inline=False)
-    page2.add_field(name="Μαθηματικά ΙΙ", value="102070166", inline=False)
-    page2.add_field(name="Οργάνωση Υπολογιστών", value="86192986", inline=False)
-    page2.add_field(name="Εισαγωγή στην Java", value="94643857", inline=False)
-    page2.add_field(name="Εκπαιδευτική Ψυχολογία", value="όποιο νάναι", inline=False)
-    page2.add_field(name="Αλγόριθμοι και Δομές Δεδομένων", value="18548971", inline=False)
-    page2.set_footer(text="Link για τις δηλώσεις: https://service.eudoxus.gr/student")
-    page3 = discord.Embed (
-        title = '__3ο Εξάμηνο__',
-        description = '__Κωδικοί Συγγραμάτων__',
-        colour = discord.Colour.red()
-    )
-    page3.add_field(name="Αντικειμενοστραφής Προγραμματισμός", value="102070267", inline=False)
-    page3.add_field(name="Επιστημονικός Υπολογισμός", value="όποιο νάναι", inline=False)
-    page3.add_field(name="Εφαρμοσμένα Μαθηματικά", value="50655955", inline=False)
-    page3.add_field(name="Προηγμένες Εφαρμογές Ψηφιακής Σχεδίασης", value="86055864", inline=False)
-    page3.add_field(name="Λειτουργικά Συστήματα", value="102070659", inline=False)
-    page3.add_field(name="Μεταγλωττιστές", value="77108866", inline=False)
-    page3.add_field(name="Μεθοδολογία Εκπαιδευτικής Έρευνας", value="68370025", inline=False)
-    page3.set_footer(text="Link για τις δηλώσεις: https://service.eudoxus.gr/student")
-    pages = [page1, page2, page3]
 
-    message = await ctx.send(embed = page1)
-    await message.add_reaction('⏮')
-    await message.add_reaction('◀')
-    await message.add_reaction('▶')
-    await message.add_reaction('⏭')
+    books = pd.read_csv('books.csv')
+    # get rows where semester is 1 
+    semester = 2
+    filtered_books = books[books['semester'] == semester]
+    filtered_books = filtered_books[['subject','code']]
+    pages = []
+    TOTAL_PAGES = 3
+    for i in range(0, TOTAL_PAGES):
+        semester = i+1
+        page = discord.Embed (
+            title = f"__{i+1}ο Εξάμηνο__",
+            colour = discord.Colour.orange()
+        )
+        for i in range(0, len(filtered_books)):
+            page.add_field(name = filtered_books['subject'].iloc[i], value = filtered_books['code'].iloc[i], inline = False)
+        pages.append(page)
+
+    message = await ctx.send(embed = pages[0])
+
+    reactions = ['⏮', '◀', '▶', '⏭']
+    for reaction in reactions:
+        await message.add_reaction(reaction)
 
     def check(reaction, user):
         return user == ctx.author
 
-    i = 0
     reaction = None
 
     while True:
@@ -465,7 +432,7 @@ async def foodclub(ctx):
     await ctx.send(embed=e)
 
 
-@bot.command()
+@bot.command(aliases=["secretariat", "contact"])
 async def secreteriat(ctx):
     e = discord.Embed(
         title=":telephone: __Γραμματεία__ :telephone:",
@@ -474,6 +441,7 @@ async def secreteriat(ctx):
     e.add_field(name="__Ώρες Γραφείου__", value="11:00-13:00", inline=False)
     e.add_field(name="__Email__", value="info@cs.ihu.gr", inline=False)
     e.add_field(name="__Τηλέφωνα__", value="2510462147\n2510462341", inline=False)
+    e.add_field(name="Website", value="http://www.cs.ihu.gr", inline=False)
     await ctx.send(embed=e)
 
 
@@ -586,6 +554,8 @@ async def colorlist(ctx):
 async def ping(ctx):
     await ctx.send(f"{round(bot.latency * 800)}ms")
 
+
+#----------------------------- HELP -----------------------------#
 
 @bot.command(aliases=["help", "commands", "cmds"])
 async def _help(ctx):
