@@ -100,5 +100,41 @@
         "email": "peamana@cs.ihu.gr",
         "phone": "N/A",
         "hours": "N/A"
+    },
+    "18": {
+        "name": "__Καλεντερίδης Βασίλειος__",
+        "email": "vkalederidis@gmail.com",
+        "phone": "N/A",
+        "hours": "N/A"
+    },
+    "19": {
+        "name": "__Μιχαηλίδης Γεώργιος__",
+        "email": "michailidisge@emt.ihu.gr",
+        "phone": "N/A",
+        "hours": "N/A"
+    },
+    "20": {
+        "name": "__Βροχίδου Ελένη__",
+        "email": "evrochid@cs.ihu.gr",
+        "phone": "N/A",
+        "hours": "N/A"
+    },
+    "21": {
+        "name": "__Σοϊλεμές Ανδρέας__",
+        "email": "asoilemes@gmail.com",
+        "phone": "N/A",
+        "hours": "N/A"
+    },
+    "22": {
+        "name": "__Τσίκνας Κωνσταντίνος__",
+        "email": "ktsiknas@emt.ihu.gr",
+        "phone": "N/A",
+        "hours": "N/A"
+    },
+    "23": {
+        "name": "__Χριστόδουλος Λυτρίδης__",
+        "email": "lytridic@cs.ihu.gr",
+        "phone": "N/A",
+        "hours": "N/A"
     }
 }
