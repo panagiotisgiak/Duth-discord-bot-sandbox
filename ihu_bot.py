@@ -6,6 +6,9 @@ import asyncio
 from discordtoken import TOKEN
 import json
 import pandas as pd
+import os
+
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -32,7 +35,7 @@ async def teachers(ctx):
         colour=discord.Colour.red()
     )
     border = ""
-    for i in range(1, 18):
+    for i in range(1, 24):
         border += str(i) + ". " + teachers[str(i)]["name"][2:-2] + "\n"
     e.add_field(name="Γράψε τον αριθμό του καθηγητή",
                 value=border)
