@@ -105,8 +105,13 @@ async def books(ctx):
         return user == ctx.author
 
     reaction = None
-
+    i = 0
     while True:
+        try:
+            reaction, user = await bot.wait_for('reaction_add', timeout = 30.0, check = check)
+            await message.remove_reaction(reaction, user)
+        except:
+            break
         if str(reaction) == '⏮':
             i = 0
             await message.edit(embed = pages[i])
@@ -122,11 +127,6 @@ async def books(ctx):
             i = 2
             await message.edit(embed = pages[i])
         
-        try:
-            reaction, user = await bot.wait_for('reaction_add', timeout = 30.0, check = check)
-            await message.remove_reaction(reaction, user)
-        except:
-            break
 
     await message.clear_reactions()
 
