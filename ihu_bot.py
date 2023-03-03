@@ -35,7 +35,7 @@ async def teachers(ctx):
         colour=discord.Colour.red()
     )
     border = ""
-    for i in range(1, 24):
+    for i in range(1, len(teachers) + 1):
         border += str(i) + ". " + teachers[str(i)]["name"][2:-2] + "\n"
     e.add_field(name="Γράψε τον αριθμό του καθηγητή",
                 value=border)
