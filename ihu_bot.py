@@ -79,14 +79,13 @@ async def services(ctx):
 async def books(ctx):
 
     books = pd.read_csv('books.csv')
-    # get rows where semester is 1 
-    semester = 2
-    filtered_books = books[books['semester'] == semester]
-    filtered_books = filtered_books[['subject','code']]
+
     pages = []
     TOTAL_PAGES = 3
     for i in range(0, TOTAL_PAGES):
         semester = i+1
+        filtered_books = books[books['semester'] == semester]
+        filtered_books = filtered_books[['subject','code']]
         page = discord.Embed (
             title = f"__{i+1}ο Εξάμηνο__",
             colour = discord.Colour.orange()
@@ -133,284 +132,46 @@ async def books(ctx):
 
 @bot.command()
 async def lessons(ctx):
-    page1 = discord.Embed (
-        title = '__1ο Εξάμηνο__',
-        description = '__Μαθήματα__',
-        colour = discord.Colour.red()
-    )
-    page1.add_field(name="`Ψηφιακή Σχεδίαση`", value="Διδακτικές μονάδες: 7.0\n"
-                                                "Ώρες διδασκαλίας: 4\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page1.add_field(name="`Μαθηματικά Ι`", value="Διδακτικές μονάδες: 6.0\n"
-                                            "Ώρες διδασκαλίας: 4\n"
-                                            "Τύπος μαθήματος: Υ", inline=True)
-    page1.add_field(name="`Διακριτά Μαθηματικά`", value="Διδακτικές μονάδες: 6.0\n"
-                                                    "Ώρες διδασκαλίας: 4\n"
-                                                    "Τύπος μαθήματος: Υ", inline=True)
-    page1.add_field(name="`Προγραμματισμός C, C++`", value="Διδακτικές μονάδες: 6.0\n"
-                                                        "Ώρες διδασκαλίας: 5\n"
-                                                        "Τύπος μαθήματος: Υ", inline=True)
-    page1.add_field(name="`Αγγλική Τεχνική Ορολογία`", value="Διδακτικές μονάδες: 3.0\n"
-                                                            "Ώρες διδασκαλίας: 2\n"
-                                                            "Τύπος μαθήματος: Υ", inline=True)
-    page1.add_field(name="`Θεωρίες Μάθησης και Μεικτή Μάθηση`", value="Διδακτικές μονάδες: 5.0\n"
-                                                            "Ώρες διδασκαλίας: 4\n"
-                                                            "Τύπος μαθήματος: Υ", inline=True)
-    page2 = discord.Embed (
-        title = '__2ο Εξάμηνο__',
-        description = '__Μαθήματα__',
-        colour = discord.Colour.red()
-    )
-    page2.add_field(name="`Βάσεις δεδομένων`", value="Διδακτικές μονάδες: 6.0\n"
-                                                "Ώρες διδασκαλίας: 5\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page2.add_field(name="`Μαθηματικά ΙΙ`", value="Διδακτικές μονάδες: 6.0\n"
-                                                "Ώρες διδασκαλίας: 4\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page2.add_field(name="`Οργάνωση Υπολογιστών`", value="Διδακτικές μονάδες: 7.0\n"
-                                                "Ώρες διδασκαλίας: 4\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page2.add_field(name="`Εισαγωγή στην Java`", value="Διδακτικές μονάδες: 6.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page2.add_field(name="`Εκπαιδευτική Ψυχολογία`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page2.add_field(name="`Αλγόριθμοι και Δομές Δεδομένων`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page3 = discord.Embed (
-        title = '__3ο Εξάμηνο__',
-        description = '__Μαθήματα__',
-        colour = discord.Colour.red()
-    )
-    page3.add_field(name="`Αντικειμενοστραφής Προγραμματισμός`", value="Διδακτικές μονάδες: 6.0\n"
-                                                                    "Ώρες διδασκαλίας: 3\n"
-                                                                    "Τύπος μαθήματος: Υ", inline=True)
-    page3.add_field(name="`Επιστημονικός Υπολογισμός`", value="Διδακτικές μονάδες: 4.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page3.add_field(name="`Εφαρμοσμένα Μαθηματικά`", value="Διδακτικές μονάδες: 4.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page3.add_field(name="`Λειτουργικά Συστήματα`", value="Διδακτικές μονάδες: 6.0\n"
-                                                "Ώρες διδασκαλίας: 4\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page3.add_field(name="`Μεθοδολογία Εκπαιδευτικής Έρευνας`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page3.add_field(name="`Μεταγλωττιστές`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page3.add_field(name="`Προηγμένες Εφαρμογές Ψηφιακής Σχεδίασης`", value="Διδακτικές μονάδες: 5.0\n"
-                                                                            "Ώρες διδασκαλίας: 3\n"
-                                                                            "Τύπος μαθήματος: Υ", inline=True)
-    page4 = discord.Embed (
-        title = '__4ο Εξάμηνο__',
-        description = '__Μαθήματα__',
-        colour = discord.Colour.red()
-    )
-    page4.add_field(name="`Αναλογικά Ηλεκτρονικά`", value="Διδακτικές μονάδες: 6.0\n"
-                                                                    "Ώρες διδασκαλίας: 4\n"
-                                                                    "Τύπος μαθήματος: Υ", inline=True)
-    page4.add_field(name="`Προγραμματισμός Διεπαφής Χρήστη`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page4.add_field(name="`Προηγμένα Θέματα Προγραμματισμού`", value="Διδακτικές μονάδες: 6.0\n"
-                                                "Ώρες διδασκαλίας: 4\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page4.add_field(name="`Στατιστική και Πιθανότητες`", value="Διδακτικές μονάδες: 3.0\n"
-                                                "Ώρες διδασκαλίας: 2\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page4.add_field(name="`Τεχνητή Νοημοσύνη`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page4.add_field(name="`ΤΠΕ στην Εκπαίδευση`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 4\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page5 = discord.Embed (
-        title = '__5ο Εξάμηνο__',
-        description = '__Μαθήματα__',
-        colour = discord.Colour.red()
-    )
-    page5.add_field(name="`Αναγνώριση Προτύπων`", value="Διδακτικές μονάδες: 5.0\n"
-                                                                    "Ώρες διδασκαλίας: 3\n"
-                                                                    "Τύπος μαθήματος: Υ", inline=True)
-    page5.add_field(name="`Δίκτυα Υπολογιστών`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page5.add_field(name="`Εισαγωγή στην Υπολογιστική Νοημοσύνη`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page5.add_field(name="`Διδακτική και Εφαρμογές στην Πληροφορική`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 4\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page5.add_field(name="`Νευρωνικά Δίκτυα`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page5.add_field(name="`Τεχνολογία Λογισμικού I`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page6 = discord.Embed (
-        title = '__6ο Εξάμηνο__',
-        description = '__Μαθήματα__',
-        colour = discord.Colour.red()
-    )
-    page6.add_field(name="`Αλγόριθμοι Βελτιστοποίησης`", value="Διδακτικές μονάδες: 5.0\n"
-                                                                    "Ώρες διδασκαλίας: 3\n"
-                                                                    "Τύπος μαθήματος: ΥΕ", inline=True)
-    page6.add_field(name="`Αλγόριθμοι Βιοπληροφορικής`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: Ε", inline=True)
-    page6.add_field(name="`Αρχιτεκτονική Υπολογιστών`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: Ε", inline=True)
-    page6.add_field(name="`Γραφικά Υπολογιστών`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: Ε", inline=True)
-    page6.add_field(name="`Εκπαιδευτική Καινοτομία και Ανάπτυξη Εφαρμογών`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 4\n"
-                                                "Τύπος μαθήματος: Ε", inline=True)
-    page6.add_field(name="`Ενσωματωμένα Συστήματα`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: ΥΕ", inline=True)
-    page6.add_field(name="`Κρυπτογραφία`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: ΥΕ", inline=True)
-    page6.add_field(name="`Μαθηματική Λογική`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: ΥΕ", inline=True)
-    page6.add_field(name="`Πρωτόκολλα και Αρχιτεκτονικές Διαδικτύου`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: ΥΕ", inline=True)
-    page6.add_field(name="`Σήματα και Συστήματα`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 4\n"
-                                                "Τύπος μαθήματος: Ε", inline=True)
-    page6.add_field(name="`Τεχνολογία Λογισμικού II`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: ΥΕ", inline=True)
-    page6.add_field(name="`Ψηφιακή Επεξεργασία Εικόνας`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: ΥΕ", inline=True)
-    page6.add_field(name="`Ψηφιακή Επεξεργασία Σήματος`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 4\n"
-                                                "Τύπος μαθήματος: Ε", inline=True)
-    page7 = discord.Embed (
-        title = '__7ο Εξάμηνο__',
-        description = '__Μαθήματα__',
-        colour = discord.Colour.red()
-    )
-    page7.add_field(name="`Ασύρματα Δίκτυα και Κινητές Επικοινωνίες`", value="Διδακτικές μονάδες: 5.0\n"
-                                                                    "Ώρες διδασκαλίας: 3\n"
-                                                                    "Τύπος μαθήματος: Ε", inline=True)
-    page7.add_field(name="`Ασφάλεια Πληροφοριών και Ιδιωτικότητα`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: ΥΕ", inline=True)
-    page7.add_field(name="`Αυτόνομα Κινούμενα Ρομπότ και Εφαρμογές`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: ΥΕ", inline=True)
-    page7.add_field(name="`Ειδικά Θέματα Βάσεων Δεδομένων`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: Ε", inline=True)
-    page7.add_field(name="`Εισαγωγή στην Τεχνητή Όραση`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: ΥΕ", inline=True)
-    page7.add_field(name="`Νοήμονα Ρομπότ`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: ΥΕ", inline=True)
-    page7.add_field(name="`Παράλληλος και Κατανεμημένος Υπολογισμός`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 4\n"
-                                                "Τύπος μαθήματος: ΥΕ", inline=True)
-    page7.add_field(name="`Προγραμματισμός του Παγκόσμιου Ιστού`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 4\n"
-                                                "Τύπος μαθήματος: Ε", inline=True)
-    page7.add_field(name="`Προηγμένα Θέματα Λειτουργικών Συστημάτων`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: Ε", inline=True)
-    page7.add_field(name="`ΠΤΥΧΙΑΚΗ ΕΡΓΑΣΙΑ`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page8 = discord.Embed (
-        title = '__8ο Εξάμηνο__',
-        description = '__Μαθήματα__',
-        colour = discord.Colour.red()
-    )
-    page8.add_field(name="`Ανάπτυξη Προηγμένων Εφαρμογών Κινητών Συσκευών`", value="Διδακτικές μονάδες: 5.0\n"
-                                                                    "Ώρες διδασκαλίας: 4\n"
-                                                                    "Τύπος μαθήματος: ΥΕ", inline=True)
-    page8.add_field(name="`Κυβερνοασφάλεια`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: ΥΕ", inline=True)
-    page8.add_field(name="`Λογική και Λογικός Προγραμματισμός`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 4\n"
-                                                "Τύπος μαθήματος: Ε", inline=True)
-    page8.add_field(name="`Συστήματα VLSI`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: ΥΕ", inline=True)
-    page8.add_field(name="`Σχεδίαση Εκπαιδευτικού Ψηφιακού Υλικού`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 4\n"
-                                                "Τύπος μαθήματος: ΥΕ", inline=True)
-    page8.add_field(name="`Σχεδιαστικά Πρότυπα`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: ΥΕ", inline=True)
-    page8.add_field(name="`Τεχνολογίες του Διαδικτύου των Πραγμάτων`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Ώρες διδασκαλίας: 3\n"
-                                                "Τύπος μαθήματος: Ε", inline=True)
-    page8.add_field(name="`ΠΤΥΧΙΑΚΗ ΕΡΓΑΣΙΑ`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)
-    page8.add_field(name="`Πρακτική άσκηση`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Τύπος μαθήματος: Ε", inline=True)
-    page8.add_field(name="`Πρακτική Άσκηση για την Απόκτηση Διδακτικής Επάρκειας`", value="Διδακτικές μονάδες: 5.0\n"
-                                                "Τύπος μαθήματος: Υ", inline=True)                                                
-    pages = [page1, page2, page3, page4, page5, page6, page7, page8]
+    lessons = pd.read_csv('lessons.csv')
+    pages = []
+    TOTAL_PAGES = 8
+    for i in range(0, TOTAL_PAGES):
+        semester = i+1
+        filtered_lessons = lessons[lessons['semester'] == semester]
+        filtered_lessons = filtered_lessons[['subject','credits', 'teaching_hours', 'subject_type']]
+        page = discord.Embed (
+            title = f"__{i+1}ο Εξάμηνο__",
+            colour = discord.Colour.orange()
+        )
+        for i in range(0, len(filtered_lessons)):
+            page.add_field(name = filtered_lessons['subject'].iloc[i], 
+                           value = "Διδακτικές Μονάδες: " + str(filtered_lessons['credits'].iloc[i]) +'\n'+
+                                   "Ώρες Διδασκαλίας: " + str(filtered_lessons['teaching_hours'].iloc[i]) +'\n'+
+                                   "Τύπος Μαθήματος: " + filtered_lessons['subject_type'].iloc[i], inline = False)
+        pages.append(page)                                            
 
-    message = await ctx.send(embed = page1)
-    await message.add_reaction('1️⃣')
-    await message.add_reaction('2️⃣')
-    await message.add_reaction('3️⃣')
-    await message.add_reaction('4️⃣')
-    await message.add_reaction('5️⃣')
-    await message.add_reaction('6️⃣')
-    await message.add_reaction('7️⃣')
-    await message.add_reaction('8️⃣')
+    message = await ctx.send(embed = pages[0])
+
+    reactions = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣']
+    
+    for reaction in reactions:
+        await message.add_reaction(reaction)
+    
 
     def check(reaction, user):
         return user == ctx.author
 
     i = 0
     reaction = None
-
     while True:
-        if str(reaction) == '1️⃣':
-            i = 0
-            await message.edit(embed = pages[i])
-        elif str(reaction) == '2️⃣':
-            i = 1
-            await message.edit(embed = pages[i])
-        elif str(reaction) == '3️⃣':
-            i = 2
-            await message.edit(embed = pages[i])
-        elif str(reaction) == '4️⃣':
-            i = 3
-            await message.edit(embed = pages[i])
-        elif str(reaction) == '5️⃣':
-            i = 4
-            await message.edit(embed = pages[i])
-        elif str(reaction) == '6️⃣':
-            i = 5
-            await message.edit(embed = pages[i])
-        elif str(reaction) == '7️⃣':
-            i = 6
-            await message.edit(embed = pages[i])
-        elif str(reaction) == '8️⃣':
-            i = 7
-            await message.edit(embed = pages[i])
-        
         try:
-            reaction, user = await bot.wait_for('reaction_add', timeout = 30.0, check = check)
+            reaction, user = await bot.wait_for('reaction_add', timeout=30.0, check=check)
             await message.remove_reaction(reaction, user)
+            if str(reaction) in reactions:
+                i = reactions.index(str(reaction))
+                await message.edit(embed=pages[i])
         except:
             break
-
     await message.clear_reactions()
 
 
