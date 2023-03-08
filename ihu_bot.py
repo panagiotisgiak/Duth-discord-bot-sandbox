@@ -28,7 +28,7 @@ async def on_ready():
 
 @bot.command()
 async def teachers(ctx):
-    with open("teachers.json", "rb") as f:
+    with open("ihu_data/teachers.json", "rb") as f:
             teachers = json.load(f)
     e = discord.Embed(
         title=":bookmark_tabs: __Πληροφορίες Καθηγητών__ :bookmark_tabs:",
@@ -60,7 +60,7 @@ async def teachers(ctx):
 @bot.command()
 async def services(ctx):
 
-    services = pd.read_csv('services.csv')
+    services = pd.read_csv('ihu_data/services.csv')
 
     e = discord.Embed(
         title=":placard: __CS IHU Υπηρεσίες__ :placard:",
@@ -74,7 +74,7 @@ async def services(ctx):
 @bot.command()
 async def books(ctx):
 
-    books = pd.read_csv('books.csv')
+    books = pd.read_csv('ihu_data/books.csv')
 
     pages = []
     TOTAL_PAGES = 3
@@ -131,8 +131,8 @@ async def books(ctx):
 @bot.command()
 async def lessons(ctx):
 
-    lessons = pd.read_csv('lessons.csv')
-    
+    lessons = pd.read_csv('ihu_data/lessons.csv')
+
     pages = []
     TOTAL_PAGES = 8
     for i in range(0, TOTAL_PAGES):
