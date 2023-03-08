@@ -31,17 +31,18 @@ async def teachers(ctx):
     with open("teachers.json", "rb") as f:
             teachers = json.load(f)
     e = discord.Embed(
-        title=":bookmark_tabs: __Teachers info__ :bookmark_tabs:",
+        title=":bookmark_tabs: __Πληροφορίες Καθηγητών__ :bookmark_tabs:",
         colour=discord.Colour.red()
     )
     border = ""
     for i in range(1, len(teachers) + 1):
         border += str(i) + ". " + teachers[str(i)]["name"][2:-2] + "\n"
-    e.add_field(name="Γράψε τον αριθμό του καθηγητή",
-                value=border)
+    e.add_field(name="Γράψε τον αριθμό του καθηγητή", value=border)
     await ctx.send(embed=e)
+
     check = lambda m: m.author == ctx.author
     msg = await bot.wait_for('message', check=check, timeout=30)
+
     try:
         e1 = discord.Embed(
                 title=teachers[msg.content]["name"],
@@ -58,20 +59,15 @@ async def teachers(ctx):
 
 @bot.command()
 async def services(ctx):
+
+    services = pd.read_csv('services.csv')
+
     e = discord.Embed(
         title=":placard: __CS IHU Υπηρεσίες__ :placard:",
         colour=discord.Colour.orange()
     )
-    e.add_field(name='Ιστοσελίδα Τμήματος Πληροφορικής', value='http://www.cs.ihu.gr\n', inline=False)
-    e.add_field(name='Εγγραφή στο uregister', value='https://uregister.emt.ihu.gr/\n', inline=False)
-    e.add_field(name='Ξέχασα τον κωδικό μου', value='https://mypassword.emt.ihu.gr/\n', inline=False)
-    e.add_field(name='Ηλεκτρονική Γραμματεία', value='https://uniportal.ihu.gr/\n', inline=False)
-    e.add_field(name='Αίτηση απόκτησης ακαδημαϊκής ταυτότητας', value='https://academicid.minedu.gov.gr/\n', inline=False)
-    e.add_field(name='Υπηρεσία δήλωσης συγγραμάτων', value='https://eudoxus.gr/\n', inline=False)
-    e.add_field(name='Ανοικτά μαθήματα (open courses)', value='https://opencourses.gr/\n', inline=False)
-    e.add_field(name='Πλατφόρμα ασύγχρονης εκπαίδευσης', value='https://moodle.cs.ihu.gr\n', inline=False)
-    e.add_field(name='Διαχείριση ομάδων μαθημάτων', value='https://courses.cs.ihu.gr/\n', inline=False)
-    e.add_field(name='Φοιτητική μέριμνα', value='http://www.teikav.edu.gr/portal/index.php/el/home/students/student-care\n', inline=False)
+    for i in range(0, len(services)):
+        e.add_field(name = services['service'].iloc[i], value = services['link'].iloc[i], inline = False)
     await ctx.send(embed=e)
 
 
@@ -88,10 +84,12 @@ async def books(ctx):
         filtered_books = filtered_books[['subject','code']]
         page = discord.Embed (
             title = f"__{i+1}ο Εξάμηνο__",
+            description="__Κωδικοί Συγγραμάτων__",
             colour = discord.Colour.orange()
         )
         for i in range(0, len(filtered_books)):
             page.add_field(name = filtered_books['subject'].iloc[i], value = filtered_books['code'].iloc[i], inline = False)
+        page.set_footer(text = "Link για τις δηλώσεις: https://service.eudoxus.gr/student")
         pages.append(page)
 
     message = await ctx.send(embed = pages[0])
@@ -132,7 +130,9 @@ async def books(ctx):
 
 @bot.command()
 async def lessons(ctx):
+
     lessons = pd.read_csv('lessons.csv')
+    
     pages = []
     TOTAL_PAGES = 8
     for i in range(0, TOTAL_PAGES):
@@ -144,10 +144,10 @@ async def lessons(ctx):
             colour = discord.Colour.orange()
         )
         for i in range(0, len(filtered_lessons)):
-            page.add_field(name = filtered_lessons['subject'].iloc[i], 
+            page.add_field(name = "`" + filtered_lessons['subject'].iloc[i] + "`", 
                            value = "Διδακτικές Μονάδες: " + str(filtered_lessons['credits'].iloc[i]) +'\n'+
                                    "Ώρες Διδασκαλίας: " + str(filtered_lessons['teaching_hours'].iloc[i]) +'\n'+
-                                   "Τύπος Μαθήματος: " + filtered_lessons['subject_type'].iloc[i], inline = False)
+                                   "Τύπος Μαθήματος: " + filtered_lessons['subject_type'].iloc[i], inline = True)
         pages.append(page)                                            
 
     message = await ctx.send(embed = pages[0])
@@ -255,7 +255,7 @@ async def dec(ctx, arg):
 
 
 @bot.command(aliases=["bin"])
-async def _bina(ctx, arg):
+async def _bin(ctx, arg):
     e = discord.Embed(
         colour=discord.Colour.red()
     )
@@ -347,7 +347,6 @@ async def _help(ctx):
                                          "**-contact** - Εμφανίζει τα στοιχεία επικοινωνίας για το τμήμα.\n"
                                          "**-books** - Εμφανίζει την λίστα των βιβλίων των εξαμήνων με τους κωδικούς.\n"
                                          "**-lessons** - Εμφανίζει το πρόγραμμα σπουδών όλων των εξαμήνων.\n"
-                                         "**-secreteriat** - Εμφανίζει τις επικοινωνίες με γραμματεία.\n"
                                          "**-library** - Εμφανίζει τις ώρες λειτουργίας της βιβλιοθήκης.",
                                          inline=False)
     page2 = discord.Embed(
