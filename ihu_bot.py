@@ -28,8 +28,10 @@ async def on_ready():
 
 @bot.command()
 async def teachers(ctx):
+
     with open("ihu_data/teachers.json", "rb") as f:
             teachers = json.load(f)
+
     e = discord.Embed(
         title=":bookmark_tabs: __Πληροφορίες Καθηγητών__ :bookmark_tabs:",
         colour=discord.Colour.red()
@@ -53,7 +55,8 @@ async def teachers(ctx):
         e1.add_field(name="Ώρες Διαθεσιμότητας", value=teachers[msg.content]["hours"], inline=False)
         await ctx.send(embed=e1)
     except:
-        await ctx.send("Γράψε έναν έγκυρο αριθμό")
+        if msg.content.isnumeric():
+            await ctx.send("Γράψε έναν έγκυρο αριθμό")
 
 
 
@@ -124,7 +127,6 @@ async def books(ctx):
             i = 2
             await message.edit(embed = pages[i])
         
-
     await message.clear_reactions()
 
 
@@ -157,7 +159,6 @@ async def lessons(ctx):
     for reaction in reactions:
         await message.add_reaction(reaction)
     
-
     def check(reaction, user):
         return user == ctx.author
 
