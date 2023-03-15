@@ -132,9 +132,16 @@
         "hours": "N/A"
     },
     "23": {
-        "name": "__Χριστόδουλος Λυτρίδης__",
+        "name": "__Λυτρίδης Χριστόδουλος__",
         "email": "lytridic@cs.ihu.gr",
         "phone": "N/A",
         "hours": "N/A"
+    },
+    "24": {
+         "name": "__Αποστολίδης Ιπποκράτης__", 
+         "email": "ipapost@ihu.gr",
+         "phone": "N/A",
+         "hours": "N/A"
     }
+           
 }
