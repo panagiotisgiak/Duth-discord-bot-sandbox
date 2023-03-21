@@ -80,7 +80,7 @@ async def books(ctx):
     books = pd.read_csv('ihu_data/books.csv')
 
     pages = []
-    TOTAL_PAGES = 3
+    TOTAL_PAGES = 4
     for i in range(0, TOTAL_PAGES):
         semester = i+1
         filtered_books = books[books['semester'] == semester]
@@ -120,11 +120,11 @@ async def books(ctx):
                 i -= 1
                 await message.edit(embed = pages[i])
         elif str(reaction) == '▶':
-            if i < 2:
+            if i < 3:
                 i += 1
                 await message.edit(embed = pages[i])
         elif str(reaction) == '⏭':
-            i = 2
+            i = 3
             await message.edit(embed = pages[i])
         
     await message.clear_reactions()
