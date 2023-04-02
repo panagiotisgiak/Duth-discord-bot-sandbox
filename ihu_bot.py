@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord.utils import get
 from discord.ui import Button, View
 from discord import app_commands
 import asyncio
@@ -256,7 +257,7 @@ async def dec(ctx, arg):
 
 
 @bot.command(aliases=["bin"])
-async def _bin(ctx, arg):
+async def bn(ctx, arg):
     e = discord.Embed(
         colour=discord.Colour.red()
     )
@@ -322,8 +323,8 @@ async def ping(ctx):
 
 #----------------------------- HELP -----------------------------#
 
-@bot.command(aliases=["help", "commands", "cmds"])
-async def _help(ctx):
+@bot.command(aliases=["commands", "cmds"])
+async def help(ctx):
     #buttons
     style = discord.ButtonStyle.green
     uni = Button(label="CS IHU", style=style, emoji="🏫")
@@ -398,6 +399,17 @@ async def _help(ctx):
     comp.callback = comp_callback
     bot.callback = bot_callback
     
+
+#------------------------------------------------------------Events------------------------------------------------------------
+
+@bot.event
+async def on_message(message):
+    bot_commands = [f"-{alias}" for command in bot.commands for alias in [command.name, *command.aliases]]
+    if message.channel.id == 901068164648030228 and message.content in bot_commands:
+        channel = get(bot.get_all_channels(), id=898491436738174999)
+        await message.channel.send(f"Οι εντολές εδώ: {channel.mention}")
+        return
+    await bot.process_commands(message)
 
 #------------------------------------------------------------Test Code------------------------------------------------------------
 
