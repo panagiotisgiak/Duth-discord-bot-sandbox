@@ -405,8 +405,8 @@ async def help(ctx):
 @bot.event
 async def on_message(message):
     bot_commands = [f"-{alias}" for command in bot.commands for alias in [command.name, *command.aliases]]
-    if message.channel.id == 901068164648030228 and message.content in bot_commands:
-        channel = get(bot.get_all_channels(), id=898491436738174999)
+    if message.channel.id == 898491436738174999 and message.content in bot_commands:
+        channel = get(bot.get_all_channels(), id=901068164648030228)
         await message.channel.send(f"Οι εντολές εδώ: {channel.mention}")
         return
     await bot.process_commands(message)
