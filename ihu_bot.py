@@ -316,9 +316,21 @@ async def colorlist(ctx):
         e.add_field(name=f"● {str(i)}", value='\u200b', inline=True)
     await ctx.send(embed=e)
 
+
+# ----------------------------- BOT ----------------------------- #
+
 @bot.command()
 async def ping(ctx):
     await ctx.send(f"{round(bot.latency * 800)}ms")
+
+@bot.command()
+async def code(ctx):
+    e = discord.Embed(
+        title=":robot: __Bot Code__ :robot:",
+        colour=discord.Colour.blue()
+    )
+    e.add_field(name="Github", value="https://github.com/PhoenixDoom/ihu_bot", inline=False)
+    await ctx.send(embed=e)
 
 
 #----------------------------- HELP -----------------------------#
@@ -373,26 +385,27 @@ async def help(ctx):
     page4 = discord.Embed(
         colour=discord.Colour.blue()
     )
-    page4.add_field(name="__Bot Info__", value="**-ping** - Εμφανίζει την ταχύτητα του μποτ ανα δευτερόλεπτο.", inline=False)
+    page4.add_field(name="__Bot Info__", value="**-ping** - Εμφανίζει την ταχύτητα του μποτ ανα δευτερόλεπτο.\n"
+                                            "**-code** - Στέλνει το link με τον κώδικα από το bot.", inline=False)
     
     message = await ctx.send(embed=page1, view=view)
 
     async def uni_callback(interaction):
         await message.edit(embed=page1)
-        await interaction.response.send_message("Εντολές σχετικά με το πανεπιστήμιο", ephemeral=True, delete_after=3)
+        await interaction.response.defer()
 
-    
     async def town_callback(interaction):
         await message.edit(embed=page2)
-        await interaction.response.send_message("Εντολές σχετικά με την πόλη", ephemeral=True, delete_after=3)
+        await interaction.response.defer()
 
     async def comp_callback(interaction):
         await message.edit(embed=page3)
-        await interaction.response.send_message("Εντολές σχετικά με την πληροφορική", ephemeral=True, delete_after=3)
+        await interaction.response.defer()
     
     async def bot_callback(interaction):
         await message.edit(embed=page4)
-        await interaction.response.send_message("Εντολές σχετικά με το μποτ", ephemeral=True, delete_after=3)
+        await interaction.response.defer()
+
 
     uni.callback = uni_callback
     town.callback = town_callback
