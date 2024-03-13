@@ -250,81 +250,6 @@ async def bmap(ctx, arg=None):
         except:
             await ctx.send("Γράψε μια έγκυρη γραμμή")
 
-    
-# ----------------------------- COMPUTER SCIENCE ----------------------------- #
-
-@bot.command()
-async def dec(ctx, arg):
-    e = discord.Embed(
-        colour=discord.Colour.red()
-    )
-    e.add_field(name=f"__Decimal number: {arg}__", value=f"**Binary number: {bin(int(arg))[2:]}\n"
-                                                        f"Octal number: {oct(int(arg))[2:]}\n"
-                                                        f"Hexadecimal: {hex(int(arg))[2:]}**")
-    await ctx.send(embed=e)
-
-
-@bot.command(aliases=["bin"])
-async def bn(ctx, arg):
-    e = discord.Embed(
-        colour=discord.Colour.red()
-    )
-    decimal = int(arg, 2)
-    e.add_field(name=f"__Binary number: {arg}__", value=f"**Decimal number: {decimal}\n"
-                                                        f"Octal number: {oct(int(decimal))[2:]}\n"
-                                                        f"Hexadecimal: {hex(int(decimal))[2:]}**")
-    await ctx.send(embed=e)
-
-
-@bot.command()
-async def asc(ctx, arg):
-    e = discord.Embed(
-        colour=discord.Colour.red()
-    )
-    e.add_field(name=f"__Value: {arg}__", value=f"**ASCII value: {ord(arg)}\n**")
-    await ctx.send(embed=e)
-
-@bot.command()
-async def ascrev(ctx, arg):
-    e = discord.Embed(
-        colour=discord.Colour.red()
-    )
-    e.add_field(name=f"__ASCII value: {arg}__", value=f"**Actual value: {chr(int(arg))}\n**")
-    await ctx.send(embed=e)
-
-@bot.command()
-async def color(ctx, arg):
-    arg = arg.lower()
-    colors = {'white':['White', '#FFFFFF', (255, 255, 255)], 'silver':['Silver', '#C0C0C0', (192, 192, 192)],
-                'gray':['Gray', '#808080', (128, 128, 128)], 'black':['Black', '#000000', (0, 0, 0)],
-                'red':['Red', '#FF0000', (255, 0, 0)], 'maroon':['Maroon', '#800000', (128, 0, 0)],
-                'yellow':['Yellow', '#FFFF00', (255, 255, 0)], 'olive':['Olive', '#800000', (128, 128, 0)],
-                'lime':['Lime', '#00FF00', (0, 255, 0)], 'green':['Green', '#008000', (0, 128, 0)],
-                'aqua':['Aqua', '#00FFFF', (0, 255, 255)], 'teal':['Teal', '#008080', (0, 128, 128)],
-                'blue':['Blue', '#0000FF', (0, 0, 255)], 'navy':['Navy', '#000080', (0, 0, 128)],
-                'fuchsia':['Fuchsia', '#FF00FF', (255, 0, 255)], 'purple':['Purple', '#800080', (128, 0, 128)]}
-    e = discord.Embed(
-        title = f"__{colors[arg][0]}__",
-        color = discord.Color.from_rgb(*colors[arg][2])
-    )
-    e.add_field(name="HEX CODE", value=f"{colors[arg][1]}", inline=True)
-    e.add_field(name="RGB CODE", value=f"{colors[arg][2]}", inline=True)
-    await ctx.send(embed=e)
-
-@bot.command()
-async def colorlist(ctx):
-    e = discord.Embed(
-        title="__COLORS__",
-        color=discord.Color.random()
-    )
-    colors = ["white", "silver", "gray", "black", "red", "maroon", "yellow", "olive", "lime", "green", "aqua", 
-                "teal", "blue", "navy", "fuchsia", "purple"]
-    inline = False
-    for i in colors:
-        e.add_field(name=f"● {str(i)}", value='\u200b', inline=True)
-    await ctx.send(embed=e)
-
-
 # ----------------------------- BOT ----------------------------- #
 
 @bot.command()
@@ -349,13 +274,11 @@ async def help(ctx):
     style = discord.ButtonStyle.green
     uni = Button(label="CS IHU", style=style, emoji="🏫")
     town = Button(label="KAVALA", style=style, emoji="🏙️")
-    comp = Button(label="COMPUTER SCIENCE", style=style, emoji="💻")
     bot = Button(label="BOT", style=style, emoji="🤖")
 
     view = View(timeout=30)
     view.add_item(uni)
     view.add_item(town)
-    view.add_item(comp)
     view.add_item(bot)
 
     page1 = discord.Embed(
@@ -379,21 +302,8 @@ async def help(ctx):
 
     page3 = discord.Embed(
         colour=discord.Colour.blue()
-    )                     
-    page3.add_field(name="__Περί πληροφορικής__",
-                value="**-bin <δυαδικός αιρθμός>** - Μετατρέπει τον δυαδικό αριθμό σε δεκαδικό, "
-                      "οκταδικό και δεκαεξαδικό.\n"
-                      "**-dec <δεκαδικός αριθμός>** - Μετατρέπει τον δεκαδικό αριθμό σε δυαδικό, "
-                      "οκταδικό και δεκαεξαδικό.\n"
-                      "**-asc <χαρακτήρας>** - Δείχνει την ASCII τιμή του χαρακτήρα.\n"
-                      "**-ascrev <αριθμός>** - Δείχνει τον χαρακτήρα που αντιπροσωπεύει η ASCII τιμή.\n"
-                      "**-color <χρώμα>** - Εμφανίζει τον HEX και RGB κώδικα του χρώματος.\n"
-                      "**-colorlist** - Εμφανίζει την λίστα βασικών χρωμάτων.", inline=False)
-
-    page4 = discord.Embed(
-        colour=discord.Colour.blue()
     )
-    page4.add_field(name="__Bot Info__", value="**-ping** - Εμφανίζει την ταχύτητα του μποτ ανα δευτερόλεπτο.\n"
+    page3.add_field(name="__Bot Info__", value="**-ping** - Εμφανίζει την ταχύτητα του μποτ ανα δευτερόλεπτο.\n"
                                             "**-code** - Στέλνει το link με τον κώδικα από το bot.", inline=False)
     
     message = await ctx.send(embed=page1, view=view)
@@ -406,18 +316,12 @@ async def help(ctx):
         await message.edit(embed=page2)
         await interaction.response.defer()
 
-    async def comp_callback(interaction):
+    async def bot_callback(interaction):
         await message.edit(embed=page3)
         await interaction.response.defer()
-    
-    async def bot_callback(interaction):
-        await message.edit(embed=page4)
-        await interaction.response.defer()
-
 
     uni.callback = uni_callback
     town.callback = town_callback
-    comp.callback = comp_callback
     bot.callback = bot_callback
     
 
