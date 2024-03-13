@@ -250,6 +250,16 @@ async def bmap(ctx, arg=None):
         except:
             await ctx.send("Γράψε μια έγκυρη γραμμή")
 
+
+@bot.command()
+async def studyguide(ctx):
+    e = discord.Embed(
+        title=":books: __Οδηγός Σπουδών__ :books:",
+        colour=discord.Colour.green()
+    )
+    e.add_field(name="__Link__", value="https://cs.ihu.gr/cs_hosting/attachments/webpages/el_study_guide.pdf", inline=False)
+    await ctx.send(embed=e)
+
 # ----------------------------- BOT ----------------------------- #
 
 @bot.command()
@@ -308,17 +318,18 @@ async def help(ctx):
     
     message = await ctx.send(embed=page1, view=view)
 
+    async def edit_message_and_defer(interaction, page):
+        await message.edit(embed=page)
+        await interaction.response.defer()
+
     async def uni_callback(interaction):
-        await message.edit(embed=page1)
-        await interaction.response.defer()
-
+        await edit_message_and_defer(interaction, page1)
+    
     async def town_callback(interaction):
-        await message.edit(embed=page2)
-        await interaction.response.defer()
-
+        await edit_message_and_defer(interaction, page2)
+    
     async def bot_callback(interaction):
-        await message.edit(embed=page3)
-        await interaction.response.defer()
+        await edit_message_and_defer(interaction, page3)
 
     uni.callback = uni_callback
     town.callback = town_callback
