@@ -47,17 +47,24 @@ async def teachers(ctx):
     msg = await bot.wait_for('message', check=check, timeout=30)
 
     try:
-        e1 = discord.Embed(
-                title=teachers[msg.content]["name"],
-                colour=discord.Colour.orange()
+        teacher_index = int(msg.content)
+        if str(teacher_index) in teachers:
+            teacher_info = teachers[str(teacher_index)]
+            response = (
+                f"**Email:** {teacher_info['email']}\n"
+                f"**Τηλέφωνο:** {teacher_info['phone']}\n"
+                f"**Ώρες Διαθεσιμότητας:** {teacher_info['hours']}"
             )
-        e1.add_field(name="Email", value=teachers[msg.content]["email"], inline=False)
-        e1.add_field(name="Τηλέφωνο", value=teachers[msg.content]["phone"], inline=False)
-        e1.add_field(name="Ώρες Διαθεσιμότητας", value=teachers[msg.content]["hours"], inline=False)
-        await ctx.send(embed=e1)
-    except:
-        if msg.content.isnumeric():
-            await ctx.send("Γράψε έναν έγκυρο αριθμό")
+            await ctx.send(embed=discord.Embed(
+                title=teacher_info['name'],
+                description=response,
+                colour=discord.Colour.orange()
+            ))
+        else:
+            await ctx.send("Δεν υπάρχει καθηγητής με αυτόν τον αριθμό.")
+    except ValueError:
+        await ctx.send("Δώσε έναν έγκυρο αριθμό.")
+
 
 
 
@@ -111,22 +118,23 @@ async def books(ctx):
         try:
             reaction, user = await bot.wait_for('reaction_add', timeout = 30.0, check = check)
             await message.remove_reaction(reaction, user)
-        except:
+            
+            if str(reaction) == '⏮':
+                i = 0
+                await message.edit(embed = pages[i])
+            elif str(reaction) == '◀':
+                if i > 0:
+                    i -= 1
+                    await message.edit(embed = pages[i])
+            elif str(reaction) == '▶':
+                if i < 4:
+                    i += 1
+                    await message.edit(embed = pages[i])
+            elif str(reaction) == '⏭':
+                i = 4
+                await message.edit(embed = pages[i])
+        except asyncio.TimeoutError:
             break
-        if str(reaction) == '⏮':
-            i = 0
-            await message.edit(embed = pages[i])
-        elif str(reaction) == '◀':
-            if i > 0:
-                i -= 1
-                await message.edit(embed = pages[i])
-        elif str(reaction) == '▶':
-            if i < 4:
-                i += 1
-                await message.edit(embed = pages[i])
-        elif str(reaction) == '⏭':
-            i = 4
-            await message.edit(embed = pages[i])
         
     await message.clear_reactions()
 
