@@ -88,7 +88,7 @@ async def books(ctx):
     books = pd.read_csv('ihu_data/books.csv')
 
     pages = []
-    TOTAL_PAGES = 5
+    TOTAL_PAGES = 6
     for i in range(0, TOTAL_PAGES):
         semester = i+1
         filtered_books = books[books['semester'] == semester]
@@ -127,11 +127,11 @@ async def books(ctx):
                     i -= 1
                     await message.edit(embed = pages[i])
             elif str(reaction) == '▶':
-                if i < 4:
+                if i < 5:
                     i += 1
                     await message.edit(embed = pages[i])
             elif str(reaction) == '⏭':
-                i = 4
+                i = 5
                 await message.edit(embed = pages[i])
         except asyncio.TimeoutError:
             break
