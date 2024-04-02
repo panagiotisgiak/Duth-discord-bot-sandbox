@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 from discord.utils import get
 from discord.ui import Button, View
-from discord import app_commands
 import asyncio
 from discordtoken import TOKEN
 import json
