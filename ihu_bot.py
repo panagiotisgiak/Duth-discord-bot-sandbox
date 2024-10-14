@@ -38,7 +38,7 @@ async def teachers(ctx):
     )
     border = ""
     for i in range(1, len(teachers) + 1):
-        border += str(i) + ". " + teachers[str(i)]["name"][2:-2] + "\n"
+        border += str(i) + ". " + teachers[str(i)]["name"] + "\n"
     e.add_field(name="Γράψε τον αριθμό του καθηγητή", value=border)
     await ctx.send(embed=e)
 
@@ -55,7 +55,7 @@ async def teachers(ctx):
                 f"**Ώρες Διαθεσιμότητας:** {teacher_info['hours']}"
             )
             await ctx.send(embed=discord.Embed(
-                title=teacher_info['name'],
+                title=f'__{teacher_info['name']}__',
                 description=response,
                 colour=discord.Colour.orange()
             ))
