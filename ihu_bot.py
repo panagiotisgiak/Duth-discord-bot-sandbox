@@ -55,7 +55,7 @@ async def teachers(ctx):
                 f"**Ώρες Διαθεσιμότητας:** {teacher_info['hours']}"
             )
             await ctx.send(embed=discord.Embed(
-                title=f'__{teacher_info['name']}__',
+                title=f"__{teacher_info['name']}__",
                 description=response,
                 colour=discord.Colour.orange()
             ))
