@@ -21,18 +21,30 @@ bot.remove_command('help')
 async def on_ready():
     await bot.change_presence(activity=discord.Game(f"-help"))
     await bot.tree.sync(guild=discord.Object(id=898491436738174996))
-    bot.loop.create_task(check_feed())
     print("Bot is ready.")
+    bot.loop.create_task(check_feed())
 
 
 # ------------------------ DUTH ANNOUNCEMENTS ------------------------ #
 
-CHANNEL_ID = 837019571776258105
+CHANNEL_ID = 901044939113254913
 
-# RSS feed URL
 rss_url = "https://cs.ihu.gr/webresources/feed.xml"
 last_guid = None
 
+def load_last_guid():
+    if os.path.exists("last_guid.txt"):
+        with open("last_guid.txt", "r") as f:
+            return f.read().strip()
+    return None
+
+
+def save_last_guid(guid):
+    with open("last_guid.txt", "w") as f:
+        f.write(guid)
+
+
+last_guid = load_last_guid()
 
 async def check_feed():
     global last_guid
@@ -40,14 +52,12 @@ async def check_feed():
     channel = bot.get_channel(CHANNEL_ID)
 
     while True:
-        # Parse the RSS feed
         feed = feedparser.parse(rss_url)
         if feed.entries:
             latest_entry = feed.entries[0]
-            # Check if the latest entry is new
             if latest_entry.guid != last_guid:
                 last_guid = latest_entry.guid
-                # Send the new announcement to the Discord channel
+                save_last_guid(last_guid)
                 e = discord.Embed(
                     title=f":newspaper: {latest_entry.title}",
                     description=latest_entry.description[:300] + "..." if len(latest_entry.description) > 300 else latest_entry.description,
@@ -56,7 +66,6 @@ async def check_feed():
                 )
                 e.set_footer(text="Πηγή: Τμήμα Πληροφορικής, ΔΠΘ")
                 await channel.send(embed=e)
-        # Wait 5 minutes before checking again
         await asyncio.sleep(300)
 
 
