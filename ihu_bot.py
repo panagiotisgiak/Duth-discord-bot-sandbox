@@ -7,6 +7,7 @@ from discordtoken import TOKEN
 import json
 import pandas as pd
 import os
+import feedparser
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -20,11 +21,46 @@ bot.remove_command('help')
 async def on_ready():
     await bot.change_presence(activity=discord.Game(f"-help"))
     await bot.tree.sync(guild=discord.Object(id=898491436738174996))
+    bot.loop.create_task(check_feed())
     print("Bot is ready.")
 
 
+# ------------------------ DUTH ANNOUNCEMENTS ------------------------ #
 
-# ------------------------ IHU INFO ------------------------ #
+CHANNEL_ID = 837019571776258105
+
+# RSS feed URL
+rss_url = "https://cs.ihu.gr/webresources/feed.xml"
+last_guid = None
+
+
+async def check_feed():
+    global last_guid
+    await bot.wait_until_ready()
+    channel = bot.get_channel(CHANNEL_ID)
+
+    while True:
+        # Parse the RSS feed
+        feed = feedparser.parse(rss_url)
+        if feed.entries:
+            latest_entry = feed.entries[0]
+            # Check if the latest entry is new
+            if latest_entry.guid != last_guid:
+                last_guid = latest_entry.guid
+                # Send the new announcement to the Discord channel
+                e = discord.Embed(
+                    title=f":newspaper: {latest_entry.title}",
+                    description=latest_entry.description[:300] + "..." if len(latest_entry.description) > 300 else latest_entry.description,
+                    url=latest_entry.link,
+                    colour=discord.Colour.blue()
+                )
+                e.set_footer(text="Πηγή: Τμήμα Πληροφορικής, ΔΠΘ")
+                await channel.send(embed=e)
+        # Wait 5 minutes before checking again
+        await asyncio.sleep(300)
+
+
+# ------------------------ DUTH INFO ------------------------ #
 
 @bot.command()
 async def teachers(ctx):
