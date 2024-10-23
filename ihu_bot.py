@@ -22,7 +22,7 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game(f"-help"))
     await bot.tree.sync(guild=discord.Object(id=898491436738174996))
     print("Bot is ready.")
-    bot.loop.create_task(check_feed())
+    #bot.loop.create_task(check_feed())
 
 
 # ------------------------ DUTH ANNOUNCEMENTS ------------------------ #
@@ -67,7 +67,6 @@ async def check_feed():
                 e.set_footer(text="Πηγή: Τμήμα Πληροφορικής, ΔΠΘ")
                 await channel.send(embed=e)
         await asyncio.sleep(300)
-
 
 # ------------------------ DUTH INFO ------------------------ #
 
@@ -132,7 +131,7 @@ async def books(ctx):
     books = pd.read_csv('ihu_data/books.csv')
 
     pages = []
-    TOTAL_PAGES = 6
+    TOTAL_PAGES = 7
     for i in range(0, TOTAL_PAGES):
         semester = i+1
         filtered_books = books[books['semester'] == semester]
@@ -146,8 +145,20 @@ async def books(ctx):
             page.add_field(name = filtered_books['subject'].iloc[i], value = filtered_books['code'].iloc[i], inline = False)
         page.set_footer(text = "Link για τις δηλώσεις: https://service.eudoxus.gr/student")
         pages.append(page)
+    
+    roles = ['1ο Έτος', '2ο Έτος', '3ο Έτος', '4ο Έτος']
+    highestRole = -1
 
-    message = await ctx.send(embed = pages[0])
+    for i, role in enumerate(roles):
+        if discord.utils.get(ctx.guild.roles, name=role) in ctx.author.roles:
+            highestRole = i
+
+    if highestRole > -1:
+        pageindex = highestRole * 2
+        message = await ctx.send(embed=pages[pageindex])
+    else:
+        message = await ctx.send(embed=pages[0])
+        pageindex = 0
 
     reactions = ['⏮', '◀', '▶', '⏭']
     for reaction in reactions:
@@ -157,31 +168,29 @@ async def books(ctx):
         return user == ctx.author
 
     reaction = None
-    i = 0
     while True:
         try:
             reaction, user = await bot.wait_for('reaction_add', timeout = 30.0, check = check)
             await message.remove_reaction(reaction, user)
             
             if str(reaction) == '⏮':
-                i = 0
-                await message.edit(embed = pages[i])
+                pageindex = 0
+                await message.edit(embed = pages[pageindex])
             elif str(reaction) == '◀':
-                if i > 0:
-                    i -= 1
-                    await message.edit(embed = pages[i])
+                if pageindex > 0:
+                    pageindex -= 1
+                    await message.edit(embed = pages[pageindex])
             elif str(reaction) == '▶':
-                if i < 5:
-                    i += 1
-                    await message.edit(embed = pages[i])
+                if pageindex < TOTAL_PAGES - 1:
+                    pageindex += 1
+                    await message.edit(embed = pages[pageindex])
             elif str(reaction) == '⏭':
-                i = 5
-                await message.edit(embed = pages[i])
+                pageindex = TOTAL_PAGES - 1
+                await message.edit(embed = pages[pageindex])
         except asyncio.TimeoutError:
             break
         
     await message.clear_reactions()
-
 
 @bot.command()
 async def lessons(ctx):
@@ -229,13 +238,18 @@ async def lessons(ctx):
     await message.clear_reactions()
 
 
-@bot.command()
-async def map(ctx):
-    e = discord.Embed(
-        color=discord.Colour.orange()
-    )
-    e.set_image(url="https://i.postimg.cc/pdr8kyFq/map.png")
-    await ctx.send(embed=e)
+# @bot.command()
+# async def map(ctx):
+#     # send image without embed
+#     file = discord.File("map.jpg", filename="map.jpg")
+#     e = discord.Embed(
+#         title=":map: __Χάρτης Τμήματος__ :map:",
+#         colour=discord.Colour.blue()
+#     )
+#     e.set_image(url="attachment://map.jpg")
+#     await ctx.send(file=file, embed=e)
+#     #TODO: Add buttons for useful buildings and professors' offices
+
 
 
 @bot.command()
