@@ -1,1 +1,1 @@
-http://cs.ihu.gr:80/view_announcement.xhtml?id=1578
+http://cs.ihu.gr:80/view_announcement.xhtml?id=1605

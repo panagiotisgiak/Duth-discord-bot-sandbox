@@ -22,14 +22,14 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game(f"-help"))
     await bot.tree.sync(guild=discord.Object(id=898491436738174996))
     print("Bot is ready.")
-    #bot.loop.create_task(check_feed())
+    bot.loop.create_task(check_feed())
 
 
 # ------------------------ DUTH ANNOUNCEMENTS ------------------------ #
 
 CHANNEL_ID = 901044939113254913
 
-rss_url = "https://cs.ihu.gr/webresources/feed.xml"
+rss_url = "https://cs.duth.gr/webresources/feed.xml"
 last_guid = None
 
 def load_last_guid():
