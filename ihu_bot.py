@@ -8,6 +8,8 @@ import json
 import pandas as pd
 import os
 import feedparser
+import requests
+import datetime
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -22,7 +24,106 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game(f"-help"))
     await bot.tree.sync(guild=discord.Object(id=898491436738174996))
     print("Bot is ready.")
-    bot.loop.create_task(check_feed())
+    if not is_local:
+        bot.loop.create_task(check_feed())
+        bot.loop.create_task(check_duth_status())
+
+#Check if the bot is running locally or on server
+def is_local():
+    if os.getenv('RUNNING_ENV') == 'local':
+        return True
+    return False
+
+# ------------------------ DUTH STATUS ------------------------ #
+def check_server_status(url):
+    try:
+        response = requests.get(url, timeout=10)
+        if response.status_code == 200:
+            return True, "Server is up and running"  # Server is up
+    except requests.ConnectionError:
+        return False, "Server is not reachable"  # Server is not reachable
+    except requests.Timeout:
+        return False, "Request timed out"  # Request timed out
+    except requests.RequestException as e:
+        print(f"An error occurred: {e}")
+        return False, f"An error occurred: {e}"  # General request error
+    return False, "Server is down"  # Server is down
+
+async def check_duth_status():
+    await bot.wait_until_ready()
+    channel = bot.get_channel(1299804831330078722)  # Replace with your channel ID
+
+    # Create the initial embed message
+    e = discord.Embed(
+        title=":satellite: __DUTH Status__ :satellite:",
+        colour=discord.Colour.blue()
+    )
+    e.set_footer(text="Ελέγχεται κάθε 5 λεπτά.")
+
+    # URLs and their display names
+    servers = {
+        "CS DUTH": "https://www.cs.duth.gr/",
+        "UNISTUDENTS": "https://students.duth.gr/",
+        "MOODLE": "https://moodle.cs.duth.gr/",
+        "COURSES": "https://courses.cs.duth.gr/"
+    }
+    
+    # Initialize status counts for each server
+    status_counts = {name: {'up': 0, 'down': 0} for name in servers.keys()}
+
+    # Add initial status fields for each server
+    for server_name in servers.keys():
+        e.add_field(name=server_name, value="Waiting for the first status check...", inline=False)
+
+    # Add a field for the last update time
+    e.add_field(name="Last Update Time", value="Never", inline=False)
+
+    message = await channel.send(embed=e)
+
+    while True:
+        # Check the status of each server
+        for server_name, url in servers.items():
+            server_up, status_message = check_server_status(url)
+
+            if server_up:
+                # Reset down count and increment up count
+                status_counts[server_name]['down'] = 0
+                status_counts[server_name]['up'] += 1
+            else:
+                # Reset up count and increment down count
+                status_counts[server_name]['up'] = 0
+                status_counts[server_name]['down'] += 1
+
+            # Build the status message with green and red boxes
+            green_boxes = "🟩 " * status_counts[server_name]['up']  # Green boxes for the server being up
+            red_boxes = "🟥 " * status_counts[server_name]['down']  # Red boxes for the server being down
+            
+            # Limit the boxes to a maximum of 20
+            total_boxes = (green_boxes + red_boxes).strip()
+            if len(total_boxes) > 20:
+                total_boxes = total_boxes[-20:]  # Keep only the last 20 boxes
+
+            # Update the status message based on server status
+            if server_up:
+                status_message = "Server is up and running"
+            else:
+                status_message = status_message  # Use the specific error message
+            
+            # Construct the final message
+            status_message = f"{total_boxes}\n{status_message}"
+
+            # Update the status field in the embed
+            e.set_field_at(list(servers.keys()).index(server_name), name=server_name, value=status_message, inline=False)
+
+        # Update the last update time field
+        current_time = datetime.datetime.now().strftime("%H:%M:%S\n%Y-%m-%d")
+        e.set_field_at(len(servers), name="Τελευταίος Έλεγχος", value=current_time, inline=False)
+
+        # Edit the existing message with the updated embed
+        await message.edit(embed=e)
+        
+        await asyncio.sleep(300)  # Sleep for 5 minutes
+
 
 
 # ------------------------ DUTH ANNOUNCEMENTS ------------------------ #
