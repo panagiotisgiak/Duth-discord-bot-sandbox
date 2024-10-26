@@ -25,8 +25,11 @@ async def on_ready():
     await bot.tree.sync(guild=discord.Object(id=898491436738174996))
     print("Bot is ready.")
     if not is_local:
+        print("Starting background tasks...")
         bot.loop.create_task(check_feed())
         bot.loop.create_task(check_duth_status())
+    else:
+        print("Running locally. Background tasks not started.")
 
 #Check if the bot is running locally or on server
 def is_local():
