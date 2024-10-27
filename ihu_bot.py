@@ -10,6 +10,9 @@ import os
 import feedparser
 import requests
 import datetime
+import socket
+
+hostname = socket.gethostname()
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -24,18 +27,14 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game(f"-help"))
     await bot.tree.sync(guild=discord.Object(id=898491436738174996))
     print("Bot is ready.")
-    if not is_local:
+    if hostname == "ihubot":
         print("Starting background tasks...")
         bot.loop.create_task(check_feed())
         bot.loop.create_task(check_duth_status())
     else:
         print("Running locally. Background tasks not started.")
 
-#Check if the bot is running locally or on server
-def is_local():
-    if os.getenv('RUNNING_ENV') == 'local':
-        return True
-    return False
+
 
 # ------------------------ DUTH STATUS ------------------------ #
 def check_server_status(url):
