@@ -374,9 +374,9 @@ async def secreteriat(ctx):
         colour=discord.Colour.red()
     )
     e.add_field(name="__Ώρες Γραφείου__", value="11:00-13:00", inline=False)
-    e.add_field(name="__Email__", value="info@cs.ihu.gr", inline=False)
+    e.add_field(name="__Email__", value="secr@cs.duth.gr", inline=False)
     e.add_field(name="__Τηλέφωνα__", value="2510462147\n2510462341", inline=False)
-    e.add_field(name="Website", value="http://www.cs.ihu.gr", inline=False)
+    e.add_field(name="Website", value="http://www.cs.duth.gr", inline=False)
     await ctx.send(embed=e)
 
 
