@@ -1,4 +1,4 @@
-# IHU BOT
+# DUTH BOT
 A discord bot for the Computer Science apartment's server.
 
 ## Installation
