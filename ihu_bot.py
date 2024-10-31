@@ -295,6 +295,98 @@ async def books(ctx):
         
     await message.clear_reactions()
 
+##telematics command
+@bot.command()
+async def telematics(ctx, route_number: str = None):
+
+    if route_number is None:
+        await ctx.send("Please provide a route number.")
+        return
+    elif not route_number.isdigit():
+        await ctx.send("Please provide a valid route number (numbers only).")
+        return
+    elif int(route_number) < 0:
+        await ctx.send("Please provide a positive number.")
+        return
+
+
+    url = f'https://rest.citybus.gr/api/v1/el/123/stops/{route_number}'
+    headers = {
+        'Authorization': 'Bearer '+fetchBearer()
+    }
+    response1 = requests.get(url, headers=headers)
+
+    if response1.status_code == 200:
+        data1 = response1.json()
+        # print(data1)
+        line_codes = ", ".join(data1['lineCodes'])
+
+        e = discord.Embed(
+            title=f"Δρομολόγια {data1['name']}",
+            description=f"Γραμμές: {line_codes}"
+        )
+        await ctx.send(embed=e)
+    else:
+        await ctx.send(f"Failed to retrieve data. Status code: {response.status_code}")
+        return
+
+    url = f'https://rest.citybus.gr/api/v1/el/123/stops/live/{route_number}'
+    headers = {
+        'Authorization': 'Bearer '+fetchBearer()
+    }
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        data = response.json()
+        print(data)
+        for vehicle in data['vehicles']:
+            line_code = vehicle['lineCode']
+            line_name = vehicle['lineName']
+            departure_mins = vehicle['departureMins']
+            departure_seconds = vehicle['departureSeconds']
+            colorr = vehicle['lineColor']
+
+            e = discord.Embed(
+                title=line_code+" "+line_name,
+                description="Arrive in: "+str(departure_mins)+" mins "+str(departure_seconds)+" seconds.",
+                colour=discord.Colour.from_str(colorr) if colorr else discord.Colour(0x7289DA)
+            )
+            # e.set_footer(text="Πηγή: https://kavala.citybus.gr")
+            await ctx.send(embed=e)
+            
+
+            # await ctx.send(f'Line Code: {line_code}, Arrive in: {departure_mins} mins {departure_seconds} seconds')
+    elif response.status_code == 404:
+        await ctx.send(f"Δεν αναμένονται δρομολόγια για τα επόμενα 30 λεπτά")
+    else:
+        await ctx.send(f"Failed to retrieve data. Status code: {response.status_code}")
+
+
+
+
+def fetchBearer():
+    url = "https://kavala.citybus.gr/stops/live/1004"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, "html.parser")
+        script_tag = soup.find("script", string=lambda s: "token" in s if s else False)
+        
+        if script_tag:
+            match = re.search(r"token\s*=\s*'([\w\.-]+)'", script_tag.string)
+            if match:
+                token = match.group(1)
+                # print("Bearer Token:", token)
+                return token
+            else:
+                print("Token not found in script.")
+        else:
+            print("Relevant script not found.")
+    else:
+        print("Failed to retrieve page.")
+
+
+
 @bot.command()
 async def lessons(ctx):
 
