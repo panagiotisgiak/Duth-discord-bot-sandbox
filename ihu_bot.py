@@ -164,7 +164,7 @@ async def check_feed():
                 e = discord.Embed(
                     title=f":newspaper: {latest_entry.title}",
                     description=latest_entry.description[:300] + "..." if len(latest_entry.description) > 300 else latest_entry.description,
-                    url=latest_entry.link,
+                    url=latest_entry.link.replace("cs.ihu.gr", "cs.duth.gr"),
                     colour=discord.Colour.blue()
                 )
                 e.set_footer(text="Πηγή: Τμήμα Πληροφορικής, ΔΠΘ")
