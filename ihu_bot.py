@@ -598,12 +598,5 @@ async def on_message(message):
         return
     await bot.process_commands(message)
 
-#------------------------------------------------------------Test Code------------------------------------------------------------
 
-
-"""
-@bot.tree.command(name = "help", description = "Testing mode", guild=discord.Object(id=898491436738174996)) #Add the guild ids in which the slash command will appear. If it should be in all, remove the argument, but note that it will take some time (up to an hour) to register the command if it's for all guilds.
-async def first_command(interaction):
-    await interaction.response.send_message("Hello!")
-"""
 bot.run(TOKEN)
