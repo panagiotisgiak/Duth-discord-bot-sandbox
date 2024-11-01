@@ -11,6 +11,9 @@ import feedparser
 import requests
 import datetime
 import socket
+from bs4 import BeautifulSoup
+import re
+
 
 hostname = socket.gethostname()
 
@@ -295,10 +298,8 @@ async def books(ctx):
         
     await message.clear_reactions()
 
-##telematics command
 @bot.command()
 async def telematics(ctx, route_number: str = None):
-
     if route_number is None:
         await ctx.send("Please provide a route number.")
         return
@@ -309,65 +310,64 @@ async def telematics(ctx, route_number: str = None):
         await ctx.send("Please provide a positive number.")
         return
 
-
+    # First request to get the stop information
     url = f'https://rest.citybus.gr/api/v1/el/123/stops/{route_number}'
     headers = {
-        'Authorization': 'Bearer '+fetchBearer()
+        'Authorization': 'Bearer ' + fetchBearer()
     }
     response1 = requests.get(url, headers=headers)
-
     if response1.status_code == 200:
         data1 = response1.json()
-        # print(data1)
-        line_codes = ", ".join(data1['lineCodes'])
+        line_codes = ", ".join(data1.get('lineCodes', []))  # Use .get to handle missing keys
 
+        # Creating the initial embed for the stop information
         e = discord.Embed(
-            title=f"Δρομολόγια {data1['name']}",
+            title=f"Δρομολόγια {data1.get('name', 'N/A')}",
             description=f"Γραμμές: {line_codes}"
         )
-        await ctx.send(embed=e)
     else:
-        await ctx.send(f"Failed to retrieve data. Status code: {response.status_code}")
+        await ctx.send(f"Failed to retrieve stop data. Status code: {response1.status_code}")
         return
 
+    # Second request to get live vehicle information
     url = f'https://rest.citybus.gr/api/v1/el/123/stops/live/{route_number}'
-    headers = {
-        'Authorization': 'Bearer '+fetchBearer()
-    }
-    response = requests.get(url, headers=headers)
+    response2 = requests.get(url, headers=headers)
+    if response2.status_code == 200:
+        data = response2.json()
+        
+        # Check if 'vehicles' key is in the response
+        if 'vehicles' in data and data['vehicles']:
+            vehicle_details = ""
+            for vehicle in data['vehicles']:
+                line_code = vehicle.get('lineCode', 'N/A')
+                line_name = vehicle.get('lineName', 'N/A')
+                departure_mins = vehicle.get('departureMins', 0)
+                departure_seconds = vehicle.get('departureSeconds', 0)
+                colorr = vehicle.get('lineColor', None)
 
-    if response.status_code == 200:
-        data = response.json()
-        print(data)
-        for vehicle in data['vehicles']:
-            line_code = vehicle['lineCode']
-            line_name = vehicle['lineName']
-            departure_mins = vehicle['departureMins']
-            departure_seconds = vehicle['departureSeconds']
-            colorr = vehicle['lineColor']
-
-            e = discord.Embed(
-                title=line_code+" "+line_name,
-                description="Arrive in: "+str(departure_mins)+" mins "+str(departure_seconds)+" seconds.",
-                colour=discord.Colour.from_str(colorr) if colorr else discord.Colour(0x7289DA)
-            )
-            # e.set_footer(text="Πηγή: https://kavala.citybus.gr")
-            await ctx.send(embed=e)
+                # Add each vehicle's details to the description
+                vehicle_details += (
+                    f"**{line_code} {line_name}**\n"
+                    f"Arrives in: {departure_mins} mins {departure_seconds} seconds.\n\n"
+                )
             
+            # Add vehicle details to the embed's description
+            e.add_field(name="Live Arrivals", value=vehicle_details, inline=False)
+            e.colour = discord.Colour.from_str(colorr) if colorr else discord.Colour(0x7289DA)
 
-            # await ctx.send(f'Line Code: {line_code}, Arrive in: {departure_mins} mins {departure_seconds} seconds')
-    elif response.status_code == 404:
-        await ctx.send(f"Δεν αναμένονται δρομολόγια για τα επόμενα 30 λεπτά")
+        else:
+            e.add_field(name="Live Arrivals", value="Δεν αναμένονται δρομολόγια για τα επόμενα 30 λεπτά.", inline=False)
+
+        # Send the embed with all the details
+        await ctx.send(embed=e)
+
     else:
-        await ctx.send(f"Failed to retrieve data. Status code: {response.status_code}")
+        await ctx.send(f"Failed to retrieve live vehicle data. Status code: {response2.status_code}")
 
-
-
-
+# Token retrieval function
 def fetchBearer():
     url = "https://kavala.citybus.gr/stops/live/1004"
     response = requests.get(url)
-
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, "html.parser")
         script_tag = soup.find("script", string=lambda s: "token" in s if s else False)
@@ -375,17 +375,13 @@ def fetchBearer():
         if script_tag:
             match = re.search(r"token\s*=\s*'([\w\.-]+)'", script_tag.string)
             if match:
-                token = match.group(1)
-                # print("Bearer Token:", token)
-                return token
+                return match.group(1)
             else:
                 print("Token not found in script.")
         else:
             print("Relevant script not found.")
     else:
         print("Failed to retrieve page.")
-
-
 
 @bot.command()
 async def lessons(ctx):
@@ -433,9 +429,9 @@ async def lessons(ctx):
     await message.clear_reactions()
 
 
-# @bot.command()
-# async def map(ctx):
-#     # send image without embed
+@bot.command()
+async def map(ctx):
+    await ctx.send("Το command αυτό δεν είναι διαθέσιμο αυτή τη στιγμή.")
 #     file = discord.File("map.jpg", filename="map.jpg")
 #     e = discord.Embed(
 #         title=":map: __Χάρτης Τμήματος__ :map:",
@@ -562,7 +558,8 @@ async def help(ctx):
         colour=discord.Colour.blue()
     )
 
-    page2.add_field(name="__Περί Καβάλας__", value="**-bmap <αριθμός γραμμής>** - Δείχνει την διαδρομή του λεωφορείου.", inline=False)
+    page2.add_field(name="__Περί Καβάλας__", value="**-bmap <αριθμός γραμμής>** - Δείχνει την διαδρομή του λεωφορείου.\n"
+                                                "**-telematics <αριθμός στάσης>** - Εμφανίζει την ώρα άφιξης των λεωφορείων.", inline=False)
 
     page3 = discord.Embed(
         colour=discord.Colour.blue()
