@@ -1,8 +1,14 @@
 import discord
-from utils.helpers import check_server_status
+from utils.helpers import check_server_status, save_message_id, load_message_id
 import config
 import datetime
 import asyncio
+import os
+import json
+
+
+
+
 
 async def check_duth_status(bot):
     await bot.wait_until_ready()
@@ -33,7 +39,21 @@ async def check_duth_status(bot):
     # Add a field for the last update time
     e.add_field(name="Τελευταίος Έλεγχος", value="Ποτέ", inline=False)
 
-    message = await channel.send(embed=e)
+    # Load the existing message ID if available
+    message_id = await load_message_id()
+
+    # Check if a previous message exists, otherwise send a new message
+    if message_id:
+        try:
+            message = await channel.fetch_message(message_id)
+        except discord.NotFound:
+            # Message no longer exists; send a new one
+            message = await channel.send(embed=e)
+            await save_message_id(message.id)
+    else:
+        # No previous message; send a new one
+        message = await channel.send(embed=e)
+        await save_message_id(message.id)
 
     while True:
         # Check the status of each server

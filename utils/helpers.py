@@ -1,5 +1,7 @@
 import requests
 import os
+import json
+import config
 
 def check_server_status(url):
     try:
@@ -17,3 +19,14 @@ def load_last_guid():
 def save_last_guid(guid):
     with open("data/last_guid.txt", "w") as f:
         f.write(guid)
+
+async def save_message_id(message_id):
+    with open(config.MESSAGE_ID_FILE, 'w') as f:
+        json.dump({"message_id": message_id}, f)
+
+async def load_message_id():
+    if os.path.exists(config.MESSAGE_ID_FILE):
+        with open(config.MESSAGE_ID_FILE, 'r') as f:
+            data = json.load(f)
+            return data.get("message_id")
+    return None

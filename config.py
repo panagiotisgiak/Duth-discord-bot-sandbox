@@ -7,3 +7,4 @@ TOKEN = TOKEN
 DUTH_CHANNEL_ID = 901044939113254913
 STATUS_CHECK_CHANNEL_ID = 1299804831330078722
 RSS_URL = "https://cs.duth.gr/webresources/feed.xml"
+MESSAGE_ID_FILE = "data/status_message_id.json"
