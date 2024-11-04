@@ -4,7 +4,7 @@ A discord bot for the Computer Science apartment's server.
 ## Installation
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install the requirements.
 ```bash
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 
 
