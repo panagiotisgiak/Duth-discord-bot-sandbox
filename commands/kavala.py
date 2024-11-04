@@ -32,7 +32,7 @@ class Kavala(commands.Cog):
         response1 = requests.get(url, headers=headers)
         if response1.status_code == 200:
             data1 = response1.json()
-            line_codes = ", ".join(data1.get('lineCodes', []))  # Use .get to handle missing keys
+            line_codes = ", ".join([code for code in data1.get('lineCodes', []) if code != '55'])
 
             # Creating the initial embed for the stop information
             e = discord.Embed(
