@@ -21,5 +21,5 @@ class Info(commands.Cog):
             title=":robot: __Bot Code__ :robot:",
             colour=discord.Colour.blue()
         )
-        e.add_field(name="Github", value="https://github.com/PhoenixDoom/ihu_bot", inline=False)
+        e.add_field(name="Github | Feel free to contribute", value="https://github.com/SteliosGee/ihu_bot", inline=False)
         await ctx.send(embed=e)
