@@ -78,6 +78,59 @@ class Kavala(commands.Cog):
         else:
             await ctx.send(f"Failed to retrieve live vehicle data. Status code: {response2.status_code}")
 
+    def saveRoutePrefer(ctx, route_number):
+    user_id = str(ctx.author.id)
+    try:
+        with open("data/user_routes.json", "r") as f:
+            try:
+                user_data = json.load(f)
+            except json.JSONDecodeError:
+                user_data = {}
+    except FileNotFoundError:
+        user_data = {}
+
+    user_data[user_id] = route_number
+    
+    with open("data/user_routes.json", "w") as f:
+        json.dump(user_data, f, indent=4)
+
+    return f"Route number {route_number} saved succesfully for {ctx.author.name}."
+
+    async def getRouteByUserID(ctx):
+        user_id = str(ctx.author.id)
+        try:
+            with open("data/user_routes.json", "r") as f:
+                try:
+                    user_data = json.load(f)
+                except json.JSONDecodeError:
+                    await ctx.send("Error: The user data file is corrupted.")
+        except FileNotFoundError:
+            await ctx.send("Error: No saved routes found.")
+
+        if user_id in user_data:
+            route_number = user_data[user_id]
+            await ctx.send(f"Route number {route_number} found in DB for {ctx.author.name}.")
+            return route_number
+        else:
+            await ctx.send("No route saved for this user.")
+
+    @bot.command()
+    async def setroute(ctx, route_number: str = None):
+        if route_number is None:
+            await ctx.send("Please provide a route number.")
+            return
+        elif not route_number.isdigit():
+            await ctx.send("Please provide a valid route number (numbers only).")
+            return
+        elif int(route_number) < 0:
+            await ctx.send("Please provide a positive number.")
+            return
+
+        await ctx.send(saveRoutePrefer(ctx, route_number))
+
+
+
+
 
     @commands.command()
     async def bmap(self, ctx, arg=None):
