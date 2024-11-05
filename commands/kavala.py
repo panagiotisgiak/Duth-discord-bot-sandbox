@@ -113,6 +113,7 @@ class Kavala(commands.Cog):
             return route_number
         else:
             await ctx.send("No route saved for this user.")
+            return -1
 
     @bot.command()
     async def setroute(ctx, route_number: str = None):
