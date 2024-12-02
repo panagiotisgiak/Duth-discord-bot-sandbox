@@ -129,6 +129,59 @@ class Kavala(commands.Cog):
 
         await ctx.send(saveRoutePrefer(ctx, route_number))
 
+    @bot.command()
+    async def myroute(ctx):
+        route_number = await getRouteByUserID(ctx)
+        if (int(route_number) != -1):
+            
+            url = f'https://rest.citybus.gr/api/v1/el/123/stops/{str(route_number)}'
+            headers = {
+                'Authorization': 'Bearer ' + fetchBearer()
+            }
+            response1 = requests.get(url, headers=headers)
+            if response1.status_code == 200:
+                data1 = response1.json()
+                line_codes = ", ".join([code for code in data1.get('lineCodes', []) if code != '55'])
+
+                e = discord.Embed(
+                    title=f"Δρομολόγια {data1.get('name', 'N/A')}",
+                    description=f"Γραμμές: {line_codes}"
+                )
+            else:
+                await ctx.send(f"Failed to retrieve stop data. Status code: {response1.status_code}")
+                return
+
+            url = f'https://rest.citybus.gr/api/v1/el/123/stops/live/{str(route_number)}'
+            response2 = requests.get(url, headers=headers)
+            if response2.status_code == 200:
+                data = response2.json()
+
+                if 'vehicles' in data and data['vehicles']:
+                    vehicle_details = ""
+                    for vehicle in data['vehicles']:
+                        line_code = vehicle.get('lineCode', 'N/A')
+                        line_name = vehicle.get('lineName', 'N/A')
+                        departure_mins = vehicle.get('departureMins', 0)
+                        departure_seconds = vehicle.get('departureSeconds', 0)
+                        colorr = vehicle.get('lineColor', None)
+
+                        vehicle_details += (
+                            f"**{line_code} {line_name}**\n"
+                            f"Arrives in: {departure_mins} mins {departure_seconds} seconds.\n\n"
+                        )
+
+                    e.add_field(name="Live Arrivals", value=vehicle_details, inline=False)
+                    e.colour = discord.Colour.from_str(colorr) if colorr else discord.Colour(0x7289DA)
+
+                else:
+                    e.add_field(name="Live Arrivals", value="Δεν αναμένονται δρομολόγια για τα επόμενα 30 λεπτά.", inline=False)
+
+                await ctx.send(embed=e)
+
+            else:
+                await ctx.send(f"Failed to retrieve live vehicle data. Status code: {response2.status_code}")
+
+
 
 
 
