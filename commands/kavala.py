@@ -2,6 +2,7 @@ from discord.ext import commands
 import discord
 import requests
 from utils.bearer import fetchBearer
+import json
 
 # Define a setup function to allow the main bot file to register this command
 async def setup(bot):
@@ -78,25 +79,25 @@ class Kavala(commands.Cog):
         else:
             await ctx.send(f"Failed to retrieve live vehicle data. Status code: {response2.status_code}")
 
-    def saveRoutePrefer(ctx, route_number):
-    user_id = str(ctx.author.id)
-    try:
-        with open("data/user_routes.json", "r") as f:
-            try:
-                user_data = json.load(f)
-            except json.JSONDecodeError:
-                user_data = {}
-    except FileNotFoundError:
-        user_data = {}
+    async def saveRoutePrefer(self, ctx, route_number):
+        user_id = str(ctx.author.id)
+        try:
+            with open("data/user_routes.json", "r") as f:
+                try:
+                    user_data = json.load(f)
+                except json.JSONDecodeError:
+                    user_data = {}
+        except FileNotFoundError:
+            user_data = {}
 
-    user_data[user_id] = route_number
+        user_data[user_id] = route_number
     
-    with open("data/user_routes.json", "w") as f:
-        json.dump(user_data, f, indent=4)
+        with open("data/user_routes.json", "w") as f:
+            json.dump(user_data, f, indent=4)
 
-    return f"Route number {route_number} saved succesfully for {ctx.author.name}."
+        return f"Route number {route_number} saved succesfully for {ctx.author.name}."
 
-    async def getRouteByUserID(ctx):
+    async def getRouteByUserID(self, ctx):
         user_id = str(ctx.author.id)
         try:
             with open("data/user_routes.json", "r") as f:
@@ -115,8 +116,8 @@ class Kavala(commands.Cog):
             await ctx.send("No route saved for this user.")
             return -1
 
-    @bot.command()
-    async def setroute(ctx, route_number: str = None):
+    @commands.command()
+    async def setroute(self, ctx, route_number: str = None):
         if route_number is None:
             await ctx.send("Please provide a route number.")
             return
@@ -127,11 +128,11 @@ class Kavala(commands.Cog):
             await ctx.send("Please provide a positive number.")
             return
 
-        await ctx.send(saveRoutePrefer(ctx, route_number))
+        await ctx.send(await self.saveRoutePrefer(ctx, route_number))
 
-    @bot.command()
-    async def myroute(ctx):
-        route_number = await getRouteByUserID(ctx)
+    @commands.command()
+    async def myroute(self, ctx):
+        route_number = await self.getRouteByUserID(ctx)
         if (int(route_number) != -1):
             
             url = f'https://rest.citybus.gr/api/v1/el/123/stops/{str(route_number)}'
