@@ -177,7 +177,13 @@ class Duth(commands.Cog):
 
     @commands.command()
     async def map(self, ctx):
-        await ctx.send("Το command αυτό δεν είναι διαθέσιμο αυτή τη στιγμή.")
+        e = discord.Embed(
+            title=":map: __Χάρτης Κτηρίων__ :map:",
+            description="https://www.google.com/maps/d/u/0/viewer?mid=1i-HiiBJ5nmbLTn0ICwlMethic5QNXxj9&femb=1&ll=40.92907370994802%2C24.378847167196625&z=18",
+            colour=discord.Colour.blue()
+        )
+        e.set_footer(text="Το url είναι προσωρινό και θα αντικατασταθεί με χάρτη.")
+        await ctx.send(embed=e)
 
     @commands.command()
     async def foodclub(self, ctx):
