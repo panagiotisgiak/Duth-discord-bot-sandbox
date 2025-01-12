@@ -5,7 +5,7 @@ from discord.utils import get
 
 # Define a setup function to allow the main bot file to register this command
 async def setup(bot):
-    print("Setting up Duth cog...")
+    print("Setting up Duth! cog...")
     await bot.add_cog(Other(bot))
 
 
