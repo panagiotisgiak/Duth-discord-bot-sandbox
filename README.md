@@ -25,7 +25,7 @@ pip install -r requirements.txt
 | -bmap        | Shows the bus route for the specified bus line in Kavala.                                                   |
 | -ping        | Displays the bot's speed in milliseconds per second.                                                        |
 | -code        | Sends the link to the bot's code.                                                                           |
-
+test
 ## Contributors
 - [PetrouilFan](https://github.com/PetrouilFan)
 - [Panagiotisgiak](https://github.com/panagiotisgiak)
